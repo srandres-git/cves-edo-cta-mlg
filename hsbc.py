@@ -3,9 +3,9 @@ import numpy as np
 import re
 from config import COLS_EDO_CTA
 
-def preprocess_hsbc(file_path: str)->pd.DataFrame:
+def preprocess_hsbc(uploaded_file)->pd.DataFrame:
     # para HSBC, se recibe como .xlsx
-    df = pd.read_excel(file_path, header=0, engine="openpyxl")
+    df = pd.read_excel(uploaded_file, header=0, engine="openpyxl")
     # Descripción, Referencia de cliente y Referencia bancaria son columnas que contienen valores numéricos
     # convertimos las columnas "Descripción", "Referencia de cliente" y "Referencia bancaria" a tipo string
     df["Descripción"] = df["Descripción"].astype(str)
