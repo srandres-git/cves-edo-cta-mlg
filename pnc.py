@@ -9,6 +9,7 @@ def preprocess_pnc(uploaded_file)->pd.DataFrame:
     encoding = get_encoding(uploaded_file=uploaded_file)
     content = uploaded_file.read()               # bytes
     text = content.decode(encoding)              # str
+    print(text)
     df = pd.read_csv(StringIO(text), encoding=encoding, sep=",")
     # Reference a string sin "'" y sin espacios
     df["Reference"] = df["Reference"].astype(str).str.replace("'", "", regex=False).str.replace(" ", "", regex=False)
