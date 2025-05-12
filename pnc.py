@@ -7,12 +7,7 @@ from utils import get_encoding
 def preprocess_pnc(uploaded_file)->pd.DataFrame:
     # para PNC, se recibe como .csv
     encoding = get_encoding(uploaded_file=uploaded_file)
-    # content = uploaded_file.read()               # bytes
     uploaded_file.seek(0)                        # reiniciar el puntero del archivo
-    # text = content.decode(encoding)              # str
-    # data = text.splitlines()                    # lista de líneas
-    # data_str = "\n".join(data)
-    # print(data_str[:100])
     df = pd.read_csv(uploaded_file, encoding=encoding, sep=",")
     # Reference a string sin "'" y sin espacios
     df["Reference"] = df["Reference"].astype(str).str.replace("'", "", regex=False).str.replace(" ", "", regex=False)

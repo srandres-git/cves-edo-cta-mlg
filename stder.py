@@ -4,10 +4,11 @@ import numpy as np
 from config import COLS_EDO_CTA
 from utils import get_encoding
 
-def preprocess_stder(file_path: str)->pd.DataFrame:
+def preprocess_stder(uploaded_file)->pd.DataFrame:
     # para Santander, se recibe como .csv
-    encoding = get_encoding(file_path)
-    df = pd.read_csv(file_path, encoding=encoding, sep=",")
+    encoding = get_encoding(uploaded_file)
+    uploaded_file.seek(0)  # reiniciar el puntero del archivo
+    df = pd.read_csv(uploaded_file, encoding=encoding, sep=",")
     # Importe y Saldo son columnas que contienen valores numéricos
     # convertimos las columnas "Importe" y "Saldo" a tipo numérico rellenando los nulos con 0
     df["Importe"] = pd.to_numeric(df["Importe"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("'",""), errors="coerce").fillna(0)
