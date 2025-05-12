@@ -2,27 +2,11 @@ import pandas as pd
 import numpy as np
 import re
 from config import COLS_EDO_CTA
-from utils import get_encoding
+from utils import txt_to_df
 
-def txt_to_df(file_path: str)->pd.DataFrame:
-    encoding = get_encoding(file_path)
-    with open(file_path, 'r', encoding=encoding) as file:
-        data = file.readlines()
-
-    data = [i.split('\t') for i in data]
-    # eliminar el \n del final de cada linea
-    data = [[i.replace('\n','') for i in j] for j in data]
-    # pasar a dataframe
-    df = pd.DataFrame(data, columns = data[0])
-    # eliminar la primera fila
-    df = df.drop(0)
-    df = df.reset_index(drop=True)
-
-    return df
-
-def preprocess_bbva(file_path: str)->pd.DataFrame:
+def preprocess_bbva(uploaded_file)->pd.DataFrame:
     # para BBVA, se recibe como .txt
-    df = txt_to_df(file_path)
+    df = txt_to_df(uploaded_file)
     # convertimos las columnas "Cargo", "abono", "Saldo" a tipo numérico rellenando los nulos con 0
     for col in ["cargo", "Abono", "Saldo"]:
         df[col] = pd.to_numeric(df[col].str.replace(",", "").str.replace(" ", "").str.replace("'", ""), errors="coerce").fillna(0)
