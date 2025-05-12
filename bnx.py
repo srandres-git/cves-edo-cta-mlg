@@ -21,7 +21,7 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
     from io import StringIO
     data_str = "".join(data)
     df = pd.read_csv(StringIO(data_str), sep=",", encoding=encoding)
-
+    print(df.columns)
     # Depósitos, Retiros y Saldo son columnas que contienen valores numéricos
     # convertimos las columnas "Depósitos" y "Retiros" a tipo numérico rellenando los nulos con 0
     df["Depósitos"] = pd.to_numeric(df["Depósitos"].str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
