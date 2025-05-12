@@ -1,3 +1,9 @@
+import pandas as pd
+import re
+import numpy as np
+from config import COLS_EDO_CTA
+from utils import get_encoding
+
 def preprocess_stder(file_path: str)->pd.DataFrame:
     # para Santander, se recibe como .csv
     encoding = get_encoding(file_path)
