@@ -19,7 +19,7 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
     data = lines[header_row:]
     # creamos un DataFrame a partir de las líneas del archivo csv
     from io import StringIO
-    data_str = "".join(data)
+    data_str = "\n".join(data)
     df = pd.read_csv(StringIO(data_str), sep=",", encoding=encoding)
     print(df.columns)
     # Depósitos, Retiros y Saldo son columnas que contienen valores numéricos
