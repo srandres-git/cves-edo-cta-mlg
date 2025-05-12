@@ -6,7 +6,7 @@ from hsbc import asign_cve_hsbc, preprocess_hsbc, format_hsbc
 from bbva import asign_cve_bbva, preprocess_bbva, format_bbva
 from pnc import asign_cve_pnc, preprocess_pnc, format_pnc
 
-def asign_cve(path_edo_cta: str, bank: str):
+def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     """
     Asigna la clave de la operación a cada fila del DataFrame edo_cta
     dependiendo del banco que se esté procesando.
@@ -14,13 +14,13 @@ def asign_cve(path_edo_cta: str, bank: str):
     if bank == "Banamex":
         edo_cta = preprocess_bnx(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_bnx, axis=1)
-        edo_cta = format_bnx(edo_cta)
+        edo_cta = format_bnx(edo_cta, cta)
     elif bank == "Santander":
         edo_cta = preprocess_stder(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_stder, axis=1)
-        edo_cta = format_stder(edo_cta)
+        edo_cta = format_stder(edo_cta, cta)
     elif bank == "HSBC":
-        edo_cta = preprocess_hsbc(path_edo_cta)
+        edo_cta = preprocess_hsbc(path_edo_cta, cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_hsbc, axis=1)
         # agrupamos todos los abonos fipp (referencia bancaria '5203') por día (fecha del apunte)
         # sumamos sus importes y sustituimos a todos estos movimientos por uno solo asignando la clave FIPP_[fecha]
@@ -41,11 +41,11 @@ def asign_cve(path_edo_cta: str, bank: str):
     elif bank == "BBVA":
         edo_cta = preprocess_bbva(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_bbva, axis=1)
-        edo_cta = format_bbva(edo_cta)
+        edo_cta = format_bbva(edo_cta, cta)
     elif bank == "PNC":
         edo_cta = preprocess_pnc(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_pnc, axis=1)
-        edo_cta = format_pnc(edo_cta)
+        edo_cta = format_pnc(edo_cta, cta)
     else:
         raise ValueError(f"Banco no soportado: {bank}")
     # convertimos las columnas "DESCRIPCIÓN", "REFERENCIA", "REFERENCIA BANCARIA", "CONCEPTO" y "CLAVE" a string

@@ -23,8 +23,7 @@ if uploaded_files:
     dfs = []
     for f in uploaded_files:
         # guarda temporal
-        df = asign_cve(f, bank)
-        df['account'] = account
+        df = asign_cve(f, bank, account)
         dfs.append(df)
     result = pd.concat(dfs, ignore_index=True)
     st.dataframe(result)

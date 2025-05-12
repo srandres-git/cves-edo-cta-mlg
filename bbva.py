@@ -62,7 +62,7 @@ def asign_cve_bbva(row):
             cve = fecha
     return cve
     
-def format_bbva(edo_cta:pd.DataFrame)->pd.DataFrame:
+def format_bbva(edo_cta:pd.DataFrame, cta: str)->pd.DataFrame:
     # formateamos el DataFrame para que tenga las columnas necesarias
     # y renombramos las columnas
     edo_cta = edo_cta.rename(columns={
@@ -86,6 +86,8 @@ def format_bbva(edo_cta:pd.DataFrame)->pd.DataFrame:
     # las columnas "REFERENCIA BANCARIA" y "DESCRIPCIÓN" se llenan con "#"
     edo_cta["REFERENCIA BANCARIA"] = "#"
     edo_cta["DESCRIPCIÓN"] = "#"
+
+    edo_cta["CUENTA"] = cta
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
 

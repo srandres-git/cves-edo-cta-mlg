@@ -50,7 +50,7 @@ def asign_cve_hsbc(row):
         cve += "_"+descripcion.split("NETNM ")[1].replace(" ", "_")
     return cve
 
-def format_hsbc(edo_cta:pd.DataFrame)->pd.DataFrame:
+def format_hsbc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # formateamos el DataFrame para que tenga las columnas necesarias
     # y renombramos las columnas
     edo_cta = edo_cta.rename(columns={
@@ -73,6 +73,7 @@ def format_hsbc(edo_cta:pd.DataFrame)->pd.DataFrame:
     edo_cta["DESCRIPCIÓN"] = edo_cta["DESCRIPCIÓN"].astype(str)
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'HSBC'
+    edo_cta["CUENTA"] = cta
     # las columnas "CONCEPTO" se llena con "#"
     edo_cta["CONCEPTO"] = "#"
     # eliminamos las columnas que no necesitamos

@@ -53,7 +53,7 @@ def asign_cve_stder(row):
             cve = concep.replace("'", "").replace(" ", "")
     return cve
 
-def format_stder(edo_cta:pd.DataFrame)->pd.DataFrame:
+def format_stder(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta = edo_cta.rename(columns={
         "Fecha": "FECHA",
         "Descripcion": "DESCRIPCIÓN",
@@ -78,6 +78,7 @@ def format_stder(edo_cta:pd.DataFrame)->pd.DataFrame:
 
     # agregamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'Santander'
+    edo_cta["CUENTA"] = cta
     # las columnas "REFERENCIA BANCARIA" se llenan con "#"
     edo_cta["REFERENCIA BANCARIA"] = "#"
     # eliminamos las columnas que no necesitamos

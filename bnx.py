@@ -91,7 +91,7 @@ def asign_cve_bnx(row):
         # si no encontramos una coincidencia, devolvemos NaN
         return np.nan
     
-def format_bnx(edo_cta:pd.DataFrame)->pd.DataFrame:
+def format_bnx(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # formateamos el DataFrame para que tenga las columnas necesarias
     # y renombramos las columnas
     edo_cta = edo_cta.rename(columns={
@@ -125,6 +125,7 @@ def format_bnx(edo_cta:pd.DataFrame)->pd.DataFrame:
 
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'Banamex'
+    edo_cta["CUENTA"] = cta
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
 
