@@ -1,15 +1,18 @@
 import pandas as pd
 import numpy as np
 import re
+import chardet
 from config import COLS_EDO_CTA
-from utils import get_encoding
 
-def preprocess_bnx(file_path: str)->pd.DataFrame:
+
+def preprocess_bnx(uploaded_file)->pd.DataFrame:
     # # para Banamex, se recibe como .csv    
     # primero leemos el archivo csv y guardamos todas las filas
-    encoding = get_encoding(file_path)
-    with open(file_path, "r", encoding=encoding) as file:
-        lines = file.readlines()
+    content = uploaded_file.read()               # bytes
+    encoding = chardet.detect(content)['encoding']
+    text = content.decode(encoding)              # str
+    lines = text.splitlines()                    # lista de líneas
+
     
     # buscamos la fila que contiene "Detalle de Movimientos - Depósitos y Retiros"
     header_row = next(i for i, line in enumerate(lines) if "Detalle de Movimientos - Depósitos y Retiros" in line)+1
