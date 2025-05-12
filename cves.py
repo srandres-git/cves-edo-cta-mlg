@@ -20,7 +20,7 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
         edo_cta["cve"] = edo_cta.apply(asign_cve_stder, axis=1)
         edo_cta = format_stder(edo_cta, cta)
     elif bank == "HSBC":
-        edo_cta = preprocess_hsbc(path_edo_cta, cta)
+        edo_cta = preprocess_hsbc(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_hsbc, axis=1)
         # agrupamos todos los abonos fipp (referencia bancaria '5203') por día (fecha del apunte)
         # sumamos sus importes y sustituimos a todos estos movimientos por uno solo asignando la clave FIPP_[fecha]
@@ -36,7 +36,7 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
         # unimos los fipps agrupados al dataframe original
         edo_cta = pd.concat([edo_cta, fipps, creds], ignore_index=True)
         # formateamos el dataframe
-        edo_cta = format_hsbc(edo_cta)     
+        edo_cta = format_hsbc(edo_cta, cta)     
 
     elif bank == "BBVA":
         edo_cta = preprocess_bbva(path_edo_cta)
