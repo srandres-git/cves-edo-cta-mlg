@@ -1,9 +1,10 @@
 import chardet
 import pandas as pd
-def get_encoding(file_path):
-    with open(file_path, 'rb') as f:
-        rawdata = f.read()
-    result = chardet.detect(rawdata)
+def get_encoding(uploaded_file):
+    content = uploaded_file.read()               # bytes
+    # Detectar la codificación del archivo
+    result = chardet.detect(content)
+    # Obtener la codificación
     encoding = result['encoding']
     return encoding
 
