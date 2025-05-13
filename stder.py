@@ -27,7 +27,7 @@ def asign_cve_stder(row):
     desc = row["Descripcion"].strip()
     concep = row["Concepto"].strip()
     # Si "Referencia" no es vacío y no es NaN o espacios o puros ceros, asignamos "Referencia" a cve
-    if ref and (not pd.isna(ref)) and ref.replace(" ", "").replace("0", "") != "":
+    if ref and ref.replace(" ", "").replace("0", "") != "":
         # referencia a string y eliminamos comillas simples
         cve = ref        
         # Si "Descripcion" contiene "IVA", asignamos "IVA"
@@ -50,7 +50,7 @@ def asign_cve_stder(row):
                 cve += "_INT"
         # Si no encontramos coincidencias, asignamos las palabras de la descripcion unidas con "_" más la fecha
         else:
-            cve = "_".join(desc.split()) + "_" + row["Fecha"].split(" ")[0].replace("-", "").replace("'", "")
+            cve = "_".join(desc.split()) + "_" + row["Fecha"].replace("'", "")
     return cve
 
 def format_stder(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
