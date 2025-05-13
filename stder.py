@@ -14,9 +14,9 @@ def preprocess_stder(uploaded_file)->pd.DataFrame:
     df["Importe"] = pd.to_numeric(df["Importe"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("'",""), errors="coerce").fillna(0)
     df["Saldo"] = pd.to_numeric(df["Saldo"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("'",""), errors="coerce").fillna(0)
     # "Referencia", "Concepto" y "Descripcion" a string
-    df["Referencia"] = df["Referencia"].astype(str).str.replace("'", "", regex=False)
-    df["Concepto"] = df["Concepto"].astype(str).str.replace("'", "", regex=False)
-    df["Descripcion"] = df["Descripcion"].astype(str).str.replace("'", "", regex=False)
+    df["Referencia"] = df["Referencia"].astype(str).str.replace("'", "", regex=False).fillna("")
+    df["Concepto"] = df["Concepto"].astype(str).str.replace("'", "", regex=False).fillna("")
+    df["Descripcion"] = df["Descripcion"].astype(str).str.replace("'", "", regex=False).fillna("")
 
     return df
 
