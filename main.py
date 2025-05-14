@@ -26,10 +26,11 @@ if uploaded_files:
         df = asign_cve(f, bank, account)
         dfs.append(df)
     result = pd.concat(dfs, ignore_index=True)
+    exp_file_name = "claves_"+uploaded_files[0].name.split(".")[0]
     st.dataframe(result)
     st.download_button(
-        "Descargar resultado",
-        data=result.to_csv(index=False).encode('utf-8'),
-        file_name=f"resultado_{bank}.csv",
-        mime='text/csv'
+        "Descargar",
+        data=result.to_excel(index=False, sheet_name=f"{bank}_{account}", freeze_panes=(1, 0),),
+        file_name=f"{exp_file_name}.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
