@@ -84,6 +84,6 @@ def format_stder(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # obtenemos los datos del beneficiario
     edo_cta["Clabe Beneficiario"] = edo_cta["Clabe Beneficiario"].fillna("").astype(str).str.replace("'", "", regex=False).str.strip()
     edo_cta["Nombre Beneficiario"] = edo_cta["Nombre Beneficiario"].fillna("").astype(str).str.replace("'", "", regex=False).str.strip()
-    edo_cta["BENEFICIARIO"] = edo_cta.apply(lambda x: 'CLABE: '+x["Clabe Beneficiario"].extract(r"(\d+)") + ' Nombre: ' + x["Nombre Beneficiario"], axis=1).replace("CLABE:  Nombre: ", "#")
+    edo_cta["BENEFICIARIO"] = edo_cta.apply(lambda x: 'CLABE: '+(re.search(r"\d+", x["Clabe Beneficiario"]).group(0) if re.search(r"\d+", x["Clabe Beneficiario"]) else '') + ' Nombre: ' + x["Nombre Beneficiario"], axis=1).replace("CLABE:  Nombre: ", "#")
 
     return edo_cta
