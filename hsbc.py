@@ -76,6 +76,7 @@ def format_hsbc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["CUENTA"] = cta
     # las columnas "CONCEPTO" se llena con "#"
     edo_cta["CONCEPTO"] = "#"
+    edo_cta["BENEFICIARIO"] = "#"
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
 

@@ -81,6 +81,11 @@ def format_stder(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["CUENTA"] = cta
     # las columnas "REFERENCIA BANCARIA" se llenan con "#"
     edo_cta["REFERENCIA BANCARIA"] = "#"
+    # obtenemos los datos del beneficiario
+    edo_cta["Clabe Beneficiario"] = edo_cta["Clabe Beneficiario"].fillna("").astype(str).str.replace("'", "", regex=False).str.strip()
+    edo_cta["Nombre Beneficiario"] = edo_cta["Nombre Beneficiario"].fillna("").astype(str).str.replace("'", "", regex=False).str.strip()
+    edo_cta["BENEFICIARIO"] = edo_cta.apply(lambda x: 'CLABE:'+x["Clabe Beneficiario"] + ' Nombre:' + x["Nombre Beneficiario"], axis=1)
+
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
 

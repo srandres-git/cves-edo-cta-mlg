@@ -86,6 +86,7 @@ def format_bbva(edo_cta:pd.DataFrame, cta: str)->pd.DataFrame:
     # las columnas "REFERENCIA BANCARIA" y "DESCRIPCIÓN" se llenan con "#"
     edo_cta["REFERENCIA BANCARIA"] = "#"
     edo_cta["DESCRIPCIÓN"] = "#"
+    edo_cta["BENEFICIARIO"] = "#"
 
     edo_cta["CUENTA"] = cta
     # eliminamos las columnas que no necesitamos

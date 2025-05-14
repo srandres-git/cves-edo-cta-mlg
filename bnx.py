@@ -126,6 +126,7 @@ def format_bnx(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'Banamex'
     edo_cta["CUENTA"] = cta
+    edo_cta["BENEFICIARIO"] = "#"
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
 
