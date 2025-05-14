@@ -89,7 +89,5 @@ def format_bbva(edo_cta:pd.DataFrame, cta: str)->pd.DataFrame:
     edo_cta["BENEFICIARIO"] = "#"
 
     edo_cta["CUENTA"] = cta
-    # eliminamos las columnas que no necesitamos
-    edo_cta = edo_cta[COLS_EDO_CTA]
 
     return edo_cta

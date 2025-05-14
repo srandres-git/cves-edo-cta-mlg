@@ -72,7 +72,4 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["CONCEPTO"] = "#"
     edo_cta["SALDO"] = "#"
     edo_cta["BENEFICIARIO"] = "#"
-    # eliminamos las columnas que no necesitamos
-    edo_cta = edo_cta[COLS_EDO_CTA]
-
     return edo_cta

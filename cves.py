@@ -5,6 +5,7 @@ from stder import asign_cve_stder, preprocess_stder, format_stder
 from hsbc import asign_cve_hsbc, preprocess_hsbc, format_hsbc
 from bbva import asign_cve_bbva, preprocess_bbva, format_bbva
 from pnc import asign_cve_pnc, preprocess_pnc, format_pnc
+from config import COLS_EDO_CTA
 
 def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     """
@@ -56,5 +57,6 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     edo_cta["DETALLE"] = edo_cta.apply(lambda x: '|'.join([x["DESCRIPCIÓN"], x["CONCEPTO"], x["REFERENCIA"], x["BENEFICIARIO"]]), axis=1)
     # eliminamos los ceros a la izquierda de la clave
     edo_cta['CLAVE'] = edo_cta['CLAVE'].apply(lambda x: re.sub(r'^[0]+', '', x) if isinstance(x, str) else x)
-    
+    # eliminamos las columnas que no necesitamos
+    edo_cta = edo_cta[COLS_EDO_CTA]
     return edo_cta
