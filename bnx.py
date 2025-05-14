@@ -127,5 +127,7 @@ def format_bnx(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["BANCO"] = 'Banamex'
     edo_cta["CUENTA"] = cta
     edo_cta["BENEFICIARIO"] = "#"
+    # la descripcion ya está impícita en el concepto, la referencia y la referencia bancaria 
+    edo_cta["DESCRIPCIÓN"] = "#"
 
     return edo_cta
