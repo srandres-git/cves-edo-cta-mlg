@@ -32,6 +32,29 @@ def asign_cve_brte(row):
         cve += "_COM"    
     return cve
 
+def extract_beneficiario(row):
+    # Buscar cuenta
+    cuenta_match = re.search(r"CUENTA:\s*(\d+)", row["DESCRIPCIÓN"])
+    cuenta = cuenta_match.group(1) if cuenta_match else ""
+    
+    # Buscar RFC
+    # el rfc puede venir como " RFC: [RFC]" o "R.F.C. [RFC]", buscaremos ambos
+    rfc_match = re.search(r"RFC:\s*([A-Z0-9]{12,13})|R\.F\.C\.\s*([A-Z0-9]{12,13})", row["DESCRIPCIÓN"])
+    if rfc_match:
+        rfc = rfc_match.group(1) if rfc_match.group(1) else rfc_match.group(2)
+    else:
+        rfc = ""
+    
+    # Formar el texto del beneficiario
+    # armamos la columna de beneficiario como "CUENTA: [cuenta] RFC: [RFC]" (si existen)
+    beneficiario = ""
+    if cuenta:
+        beneficiario += f"CUENTA: {cuenta} "
+    if rfc:
+        beneficiario += f"RFC: {rfc}"
+    
+    return beneficiario.strip()
+
 def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # formateamos el DataFrame para que tenga las columnas necesarias
     # y renombramos las columnas
@@ -46,19 +69,6 @@ def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"].astype(str), format="%d/%m/%Y", errors="raise")
     # armamos la referencia bancaria con el código de transacción y la sucursal
     edo_cta["REFERENCIA BANCARIA"] = ('Cód. Transacción: ' + edo_cta["COD. TRANSAC"] + 'Sucursal: ' + edo_cta["SUCURSAL"])
-    # tratamos de extraer la cuenta y RFC del beneficiario de la descripción
-    cuenta = re.search(r"CUENTA:\s*(\d+)", edo_cta["DESCRIPCIÓN"])
-    # el rfc puede venir como " RFC: [RFC]" o "R.F.C. [RFC]", buscaremos ambos
-    rfc = re.search(r"RFC:\s*([A-Z0-9]{12,13})|R\.F\.C\.\s*([A-Z0-9]{12,13})", edo_cta["DESCRIPCIÓN"])
-    # armamos la columna de beneficiario como "CUENTA: [cuenta] RFC: [RFC]" (si existen)
-    if cuenta:
-        cuenta = cuenta.group(1)
-    else:
-        cuenta = ""
-    if rfc:
-        rfc = rfc.group(1) if rfc.group(1) else rfc.group(2)
-    else:
-        rfc = ""
-    edo_cta["BENEFICIARIO"] = ("CUENTA: " + cuenta +" " if cuenta!="" else "") + ("RFC: " + rfc if rfc!="" else "")
+    edo_cta["BENEFICIARIO"] = edo_cta.apply(extract_beneficiario, axis=1)
     
     return edo_cta
