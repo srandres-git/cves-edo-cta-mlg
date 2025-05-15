@@ -7,19 +7,20 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
     # para Banorte, se recibe como .csv
     encoding = get_encoding(uploaded_file)
     uploaded_file.seek(0)  # reiniciar el puntero del archivo
-    df = pd.read_csv(uploaded_file, encoding=encoding, sep=",", dtype={"REFERENCIA": str})
+    df = pd.read_csv(uploaded_file, encoding=encoding, sep=",",
+                     dtype={
+                            "REFERENCIA": str,
+                            "DESCRIPCIÓN": str,
+                            "COD. TRANSAC": str,
+                            "SUCURSAL": str,
+                            "MOVIMIENTO": str,
+                            "DESCRIPCIÓN DETALLADA": str,
+                     })
     # DEPóSITOS, RETIROS y SALDO son columnas que contienen valores numéricos
     # convertimos las columnas "DEPÓSITOS", "RETIROS" y "SALDO" a tipo numérico rellenando los nulos y '-' con 0
     df["DEPÓSITOS"] = pd.to_numeric(df["DEPÓSITOS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
     df["RETIROS"] = pd.to_numeric(df["RETIROS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
     df["SALDO"] = pd.to_numeric(df["SALDO"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
-    # REFERENCIA, DESCRIPCIÓN, COD. TRANSAC, SUCURSAL, MOVIMIENTO y DESCRIPCIÓN DETALLADA a string
-    df["REFERENCIA"] = df["REFERENCIA"].fillna("").astype(str).str.replace("'", "", regex=False)
-    df["DESCRIPCIÓN"] = df["DESCRIPCIÓN"].fillna("").astype(str).str.replace("'", "", regex=False)
-    df["COD. TRANSAC"] = df["COD. TRANSAC"].fillna("").astype(str).str.replace("'", "", regex=False)
-    df["SUCURSAL"] = df["SUCURSAL"].fillna("").astype(str).str.replace("'", "", regex=False)
-    df["MOVIMIENTO"] = df["MOVIMIENTO"].fillna("").astype(str).str.replace("'", "", regex=False)
-    df["DESCRIPCIÓN DETALLADA"] = df["DESCRIPCIÓN DETALLADA"].fillna("").astype(str).str.replace("'", "", regex=False)
 
     return df
 
