@@ -70,5 +70,8 @@ def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # armamos la referencia bancaria con el código de transacción y la sucursal
     edo_cta["REFERENCIA BANCARIA"] = ('Cód. Transacción: ' + edo_cta["COD. TRANSAC"] + 'Sucursal: ' + edo_cta["SUCURSAL"])
     edo_cta["BENEFICIARIO"] = edo_cta.apply(extract_beneficiario, axis=1)
+
+    edo_cta["BANCO"] = "Banorte"
+    edo_cta["CUENTA"] = cta
     
     return edo_cta
