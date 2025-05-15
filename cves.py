@@ -5,7 +5,7 @@ from stder import asign_cve_stder, preprocess_stder, format_stder
 from hsbc import asign_cve_hsbc, preprocess_hsbc, format_hsbc
 from bbva import asign_cve_bbva, preprocess_bbva, format_bbva
 from pnc import asign_cve_pnc, preprocess_pnc, format_pnc
-from brte import asign_cve_banorte, preprocess_banorte, format_banorte
+from brte import asign_cve_brte, preprocess_brte, format_brte
 from config import COLS_EDO_CTA
 
 def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
