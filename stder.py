@@ -1,7 +1,6 @@
 import pandas as pd
 import re
 import numpy as np
-from config import COLS_EDO_CTA
 from utils import get_encoding
 
 def preprocess_stder(uploaded_file)->pd.DataFrame:

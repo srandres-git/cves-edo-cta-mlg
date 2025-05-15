@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import re
-from config import COLS_EDO_CTA
 
 def preprocess_hsbc(uploaded_file)->pd.DataFrame:
     # para HSBC, se recibe como .xlsx

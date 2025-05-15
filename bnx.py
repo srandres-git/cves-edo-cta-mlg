@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import re
 import chardet
-from config import COLS_EDO_CTA
-
 
 def preprocess_bnx(uploaded_file)->pd.DataFrame:
     # # para Banamex, se recibe como .csv    

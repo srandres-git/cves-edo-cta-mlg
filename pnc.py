@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-from io import StringIO
-from config import COLS_EDO_CTA
 from utils import get_encoding
 
 def preprocess_pnc(uploaded_file)->pd.DataFrame:
