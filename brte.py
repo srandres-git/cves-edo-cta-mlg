@@ -18,9 +18,9 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
                      })
     # DEPóSITOS, RETIROS y SALDO son columnas que contienen valores numéricos
     # convertimos las columnas "DEPÓSITOS", "RETIROS" y "SALDO" a tipo numérico rellenando los nulos y '-' con 0
-    df["DEPÓSITOS"] = pd.to_numeric(df["DEPÓSITOS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
-    df["RETIROS"] = pd.to_numeric(df["RETIROS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
-    df["SALDO"] = pd.to_numeric(df["SALDO"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
+    df["DEPÓSITOS"] = pd.to_numeric(df["DEPÓSITOS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="raise").fillna(0)
+    df["RETIROS"] = pd.to_numeric(df["RETIROS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="raise").fillna(0)
+    df["SALDO"] = pd.to_numeric(df["SALDO"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="raise").fillna(0)
 
     return df
 
