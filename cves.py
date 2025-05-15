@@ -49,9 +49,9 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
         edo_cta["cve"] = edo_cta.apply(asign_cve_pnc, axis=1)
         edo_cta = format_pnc(edo_cta, cta)
     elif bank == "Banorte":
-        edo_cta = preprocess_banorte(path_edo_cta)
-        edo_cta["cve"] = edo_cta.apply(asign_cve_banorte, axis=1)
-        edo_cta = format_banorte(edo_cta, cta)
+        edo_cta = preprocess_brte(path_edo_cta)
+        edo_cta["cve"] = edo_cta.apply(asign_cve_brte, axis=1)
+        edo_cta = format_brte(edo_cta, cta)
     else:
         raise ValueError(f"Banco no soportado: {bank}")
     # convertimos las columnas "DESCRIPCIÓN", "REFERENCIA", "REFERENCIA BANCARIA", "CONCEPTO" y "CLAVE" a string
