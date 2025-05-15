@@ -7,7 +7,7 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
     # para Banorte, se recibe como .csv
     encoding = get_encoding(uploaded_file)
     uploaded_file.seek(0)  # reiniciar el puntero del archivo
-    df = pd.read_csv(uploaded_file, encoding=encoding, sep=",")
+    df = pd.read_csv(uploaded_file, encoding=encoding, sep=",", dtype={"REFERENCIA": str})
     # DEPóSITOS, RETIROS y SALDO son columnas que contienen valores numéricos
     # convertimos las columnas "DEPÓSITOS", "RETIROS" y "SALDO" a tipo numérico rellenando los nulos y '-' con 0
     df["DEPÓSITOS"] = pd.to_numeric(df["DEPÓSITOS"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("-", "0"), errors="coerce").fillna(0)
@@ -68,7 +68,7 @@ def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # fecha a datetime
     edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"].astype(str), format="%d/%m/%Y", errors="raise")
     # armamos la referencia bancaria con el código de transacción y la sucursal
-    edo_cta["REFERENCIA BANCARIA"] = ('Cód. Transacción: ' + edo_cta["COD. TRANSAC"] + 'Sucursal: ' + edo_cta["SUCURSAL"])
+    edo_cta["REFERENCIA BANCARIA"] = ('Cod. Transacción: ' + edo_cta["COD. TRANSAC"] +' ' + 'Sucursal: ' + edo_cta["SUCURSAL"])
     edo_cta["BENEFICIARIO"] = edo_cta.apply(extract_beneficiario, axis=1)
 
     edo_cta["BANCO"] = "Banorte"
