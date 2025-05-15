@@ -44,7 +44,7 @@ def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # fecha a datetime
     edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"].astype(str), format="%d/%m/%Y", errors="raise")
     # armamos la referencia bancaria con el código de transacción y la sucursal
-    edo_cta["REFERENCIA BANCARIA"] = 'Cód. Transacción: ' + edo_cta["COD. TRANSAC"] + 'Sucursal: ' + edo_cta["SUCURSAL"]
+    edo_cta["REFERENCIA BANCARIA"] = 'Cód. Transacción: ' + edo_cta["COD. TRANSAC"].str + 'Sucursal: ' + edo_cta["SUCURSAL"].str
     # tratamos de extraer la cuenta y RFC del beneficiario de la descripción
     cuenta = re.search(r"CUENTA:\s*(\d+)", edo_cta["DESCRIPCIÓN"])
     # el rfc puede venir como " RFC: [RFC]" o "R.F.C. [RFC]", buscaremos ambos
