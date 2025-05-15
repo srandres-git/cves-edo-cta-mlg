@@ -5,6 +5,7 @@ from stder import asign_cve_stder, preprocess_stder, format_stder
 from hsbc import asign_cve_hsbc, preprocess_hsbc, format_hsbc
 from bbva import asign_cve_bbva, preprocess_bbva, format_bbva
 from pnc import asign_cve_pnc, preprocess_pnc, format_pnc
+from brte import asign_cve_banorte, preprocess_banorte, format_banorte
 from config import COLS_EDO_CTA
 
 def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
@@ -47,6 +48,10 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
         edo_cta = preprocess_pnc(path_edo_cta)
         edo_cta["cve"] = edo_cta.apply(asign_cve_pnc, axis=1)
         edo_cta = format_pnc(edo_cta, cta)
+    elif bank == "Banorte":
+        edo_cta = preprocess_banorte(path_edo_cta)
+        edo_cta["cve"] = edo_cta.apply(asign_cve_banorte, axis=1)
+        edo_cta = format_banorte(edo_cta, cta)
     else:
         raise ValueError(f"Banco no soportado: {bank}")
     # convertimos las columnas "DESCRIPCIÓN", "REFERENCIA", "REFERENCIA BANCARIA", "CONCEPTO" y "CLAVE" a string
