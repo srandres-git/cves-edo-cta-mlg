@@ -54,6 +54,9 @@ def extract_beneficiario(row):
     if rfc:
         beneficiario += f"RFC: {rfc}"
     
+    if not beneficiario:
+        return "#"
+    
     return beneficiario.strip()
 
 def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
