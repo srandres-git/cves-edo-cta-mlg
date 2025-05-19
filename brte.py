@@ -40,9 +40,10 @@ def extract_beneficiario(row):
     
     # Buscar RFC
     # el rfc puede venir como " RFC: [RFC]" o "R.F.C. [RFC]", buscaremos ambos
-    rfc_match = re.search(r"RFC:\s*([A-Z0-9]{12,13})|R\.F\.C\.\s*([A-Z0-9]{12,13})", row["DESCRIPCIÓN"])
+    rfc_match = re.search(r"RFC:\s*([ÑA-Z]{3,4}\s*[0-9]{6}\s*[0-9A-Z]{3})|R\.F\.C\.\s*([ÑA-Z]{3,4}\s*[0-9]{6}\s*[0-9A-Z]{3})", row["DESCRIPCIÓN"])
     if rfc_match:
         rfc = rfc_match.group(1) if rfc_match.group(1) else rfc_match.group(2)
+        rfc = rfc.replace(" ", "")  # eliminar espacios
     else:
         rfc = ""
     
