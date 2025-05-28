@@ -18,6 +18,12 @@ def asign_cve_hsbc(row):
     ref_cliente = row["Referencia de cliente"]
     ref_banc = row["Referencia bancaria"]
     cve = np.nan
+    # buscamos el patrón "[palabra clave] [más texto] [dígitos] SPEI" en la descripción,
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
+    match = re.search(r"(TMLG|NPRO|REEM)\s+.*?(\d{6})\s+SPEI", descripcion)
+    if match:
+        cve = match.group(2)
+        return cve
     # si la descripción contiene "I.V.A." o "IVA", cve es la referencia de cliente sin espacios ni NaN ni comillas simples precedido de "IVA_"
     if "I.V.A." in descripcion or "IVA" in descripcion:
         cve ="IVA_"+ ref_cliente
