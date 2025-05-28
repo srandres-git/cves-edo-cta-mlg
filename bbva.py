@@ -40,7 +40,11 @@ def asign_cve_bbva(row):
         else: 
             importe = str(row["Abono"]).replace(",", "").replace(".", "").replace(" ", "").strip()
         cve = "NP_" + fecha + "_" + importe
-    
+    # si en ref aparece "[dígitos]TMLG", cve son los últimos 6 dígitos de [dígitos]
+    elif re.search(r"\d{6}TMLG", ref):
+        match = re.search(r"(\d{6})(TMLG)", ref)
+        if match:
+            cve = match.group(1)
     # si ref tiene formato "GUIA:[7 dígitos]", cve es "[7 dígitos]"
     elif re.search(r"GUIA:\d{7}", ref):
         match = re.search(r"GUIA:(\d{7})", ref)
