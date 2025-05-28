@@ -36,6 +36,13 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
 
 def asign_cve_bnx(row):
+    # buscamos el patrón "[6 dígitos] Referencia Alfanúmerica: [palabra clave] [más texto]", donde los 6 dígitos son la clave
+    # y la palabra clave es "TMLG", "NPRO" o "REEM"
+    match = re.search(r"(\d{6})\s+Referencia Alfanúmerica:\s*(TMLG|NPRO|REEM)", row["Descripción"])
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        clave = match.group(1)
+        return clave
     # buscamos el formato "LY[6 dígitos]_[dígitos]" en la columna "Descripción"
     match = re.search(r"(LY\d{6}_\d+)", row["Descripción"])
     if match:
