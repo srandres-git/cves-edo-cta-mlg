@@ -25,8 +25,16 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
     return df
 
 def asign_cve_brte(row):
-    cve = row["MOVIMIENTO"].strip()
     desc = row["DESCRIPCIÓN"].strip()
+    det = row["DESCRIPCIÓN DETALLADA"].strip()
+    # buscamos el patrón "CONCEPTO: [palabra clave] [más texto], REFERENCIA: [dígitos]" en la descripción detallada,
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
+    match = re.search(r"CONCEPTO:\s*(TMLG|NPRO|REEM)\s*.*?(\d{6})\s", det)
+    if match:
+        cve = match.group(2)
+        return cve
+    
+    cve = row["MOVIMIENTO"].strip() 
     if 'IVA' in desc:
         cve += "_IVA"
     elif 'COM' in desc:

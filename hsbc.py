@@ -20,7 +20,7 @@ def asign_cve_hsbc(row):
     cve = np.nan
     # buscamos el patrón "[palabra clave] [más texto] [dígitos] SPEI" en la descripción,
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
-    match = re.search(r"(TMLG|NPRO|REEM)\s+.*?(\d{6})\s+SPEI", descripcion)
+    match = re.search(r"(TMLG|NPRO|REEM)\s*.*?(\d{6})\s+SPEI", descripcion)
     if match:
         cve = match.group(2)
         return cve
