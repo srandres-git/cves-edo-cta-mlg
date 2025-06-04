@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from utils import get_encoding
+import re
 
 def preprocess_pnc(uploaded_file)->pd.DataFrame:
     # para PNC, se recibe como .csv
@@ -9,12 +10,26 @@ def preprocess_pnc(uploaded_file)->pd.DataFrame:
     df = pd.read_csv(uploaded_file, encoding=encoding, sep=",")
     # Reference a string sin "'" y sin espacios
     df["Reference"] = df["Reference"].astype(str).str.replace("'", "", regex=False).str.replace(" ", "", regex=False)
+    df["Description"] = df["Description"].astype(str)
     
     return df
 
 def asign_cve_pnc(row):
     ref = row["Reference"]
+    descripcion = row["Description"]
     cve = np.nan
+    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
+    match = re.search(r"([TG]\d{10})", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        cve = match.group(1)
+        return cve
+    # buscamos el patrón "[palabra clave][6 dígitos]" en la descripción
+    match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        cve = match.group(1) + match.group(2)
+        return cve
     # Capturar [AsOfDate]_[BaiControl] para movimientos con referencia genérica ('00000000000). Ejemplo: 03022025_293
     if ref == "00000000000":
         # fecha hasta día (sin hora) en formato DDMMYYYY, dado que viene como "2025-02-26  12:00:00 AM"
