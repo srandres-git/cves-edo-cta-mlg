@@ -18,8 +18,8 @@ def asign_cve_pnc(row):
     ref = row["Reference"]
     descripcion = row["Description"]
     cve = np.nan
-    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
-    match = re.search(r"([TG]\d{10})", descripcion)
+    # buscamos el patrón de clave de pago a proveedor o acreedor "OBI:[T o G][10 dígitos]"
+    match = re.search(r"OBI:([TG]\d{10})", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         cve = match.group(1)
