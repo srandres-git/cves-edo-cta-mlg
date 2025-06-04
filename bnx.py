@@ -42,7 +42,7 @@ def asign_cve_bnx(row):
     match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
-        clave = match.group(1)
+        clave = match.group(2)
         return clave
     # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
     match = re.search(r"([TG]\d{10})", descripcion)
