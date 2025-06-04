@@ -39,7 +39,7 @@ def asign_cve_bnx(row):
     descripcion = row["Descripción"]
     # buscamos el patrón "[6 dígitos] Referencia Alfanúmerica: [palabra clave] [más texto]", donde los 6 dígitos son la clave
     # y la palabra clave es "TMLG", "NPRO" o "REEM"
-    match = re.search(r"(\d{6})\s+Referencia Alfanúmerica:\s*(TMLG|NPRO|REEM)", descripcion)
+    match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1)
