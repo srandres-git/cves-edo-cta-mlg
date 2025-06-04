@@ -33,7 +33,11 @@ def asign_cve_brte(row):
     if match:
         cve = match.group(2)
         return cve
-    
+    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
+    match = re.search(r"([TG]\d{10})", det)
+    if match:
+        cve = match.group(1)
+        return cve
     cve = row["MOVIMIENTO"].strip() 
     if 'IVA' in desc:
         cve += "_IVA"
