@@ -36,22 +36,29 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
 
 def asign_cve_bnx(row):
+    descripcion = row["Descripción"]
     # buscamos el patrón "[6 dígitos] Referencia Alfanúmerica: [palabra clave] [más texto]", donde los 6 dígitos son la clave
     # y la palabra clave es "TMLG", "NPRO" o "REEM"
-    match = re.search(r"(\d{6})\s+Referencia Alfanúmerica:\s*(TMLG|NPRO|REEM)", row["Descripción"])
+    match = re.search(r"(\d{6})\s+Referencia Alfanúmerica:\s*(TMLG|NPRO|REEM)", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        clave = match.group(1)
+        return clave
+    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
+    match = re.search(r"([TG]\d{10})", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1)
         return clave
     # buscamos el formato "LY[6 dígitos]_[dígitos]" en la columna "Descripción"
-    match = re.search(r"(LY\d{6}_\d+)", row["Descripción"])
+    match = re.search(r"(LY\d{6}_\d+)", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         # y concatenamos "D" o "R" dependiendo del valor de "Depósitos" o "Retiros"
         clave = match.group(0)
         return clave
     # buscamos el texto PAGOS FACTS MULTILOG en la columna "Descripción"
-    match = re.search(r"PAGOS FACTS MULTILOG", row["Descripción"])
+    match = re.search(r"PAGOS FACTS MULTILOG",descripcion)
     if match:
         # si encontramos una coincidencia, la clave estará formada por la fecha y el importe
         # de la transacción, separados por un guion bajo
@@ -74,7 +81,7 @@ def asign_cve_bnx(row):
 
     # buscamos la clave numérica que aparace en el campo "Descripción"
     # después de "Autorización:"
-    match = re.search(r"Autorización:\s*(\d+)", row["Descripción"])
+    match = re.search(r"Autorización:\s*(\d+)", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         # y concatenamos "D" o "R" dependiendo del valor de "Depósitos" o "Retiros"
@@ -85,10 +92,10 @@ def asign_cve_bnx(row):
             clave = "R_" + clave
         
         # si la palabra "IVA" está en la descripción, le agregamos "IVA" a la clave
-        if "IVA" in row["Descripción"]:
+        if "IVA" in descripcion:
             clave += "_IVA"
         # si no, si la palabra "COM." o "COMISION" está en la descripción, le agregamos "COM" a la clave
-        elif "COM." in row["Descripción"] or "COMISION" in row["Descripción"]:
+        elif "COM." in descripcion or "COMISION" in descripcion:
             clave += "_COM"
         
         return clave
