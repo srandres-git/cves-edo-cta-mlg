@@ -25,6 +25,19 @@ def asign_cve_stder(row):
     ref = row["Referencia"].strip()
     desc = row["Descripcion"].strip()
     concep = row["Concepto"].strip()
+    # buscamos el patrón "[palabra clave][6 díditos]" en el concepto,
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM"
+    match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", concep)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        cve = match.group(1) + match.group(2)
+        return cve
+    # buscamos el patrón "[T o G][10 dígitos]" en el concepto
+    match = re.search(r"([TG]\d{10})", concep)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        cve = match.group(1)
+        return cve
     # Si "Referencia" no es vacío y no es NaN o espacios o puros ceros, asignamos "Referencia" a cve
     if ref and ref.replace(" ", "").replace("0", "") != "":
         # referencia a string y eliminamos comillas simples

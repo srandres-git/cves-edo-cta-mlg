@@ -37,8 +37,8 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
 def asign_cve_bnx(row):
     descripcion = row["Descripción"]
-    # buscamos el patrón "[6 dígitos] Referencia Alfanúmerica: [palabra clave] [más texto]", donde los 6 dígitos son la clave
-    # y la palabra clave es "TMLG", "NPRO" o "REEM"
+    # buscamos el patrón # "[palabra clave][texto] Referencia Númerica: [dígitos] Autorización" en la columna "Descripción"
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
     match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
