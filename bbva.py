@@ -40,12 +40,12 @@ def asign_cve_bbva(row):
         else: 
             importe = str(row["Abono"]).replace(",", "").replace(".", "").replace(" ", "").strip()
         cve = "NP_" + fecha + "_" + importe
-    # si en ref aparece "[dígitos][palabra clave]", cve son los últimos 6 dígitos de [dígitos]
+    # si en ref aparece "[palabra clave][6 dígitos]", cve es la palabra clave concatenada con los 6 dígitos
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM"
-    elif re.search(r"(\d{6})(TMLG|NPRO|REEM)", ref):
-        match = re.search(r"(\d{6})(TMLG|NPRO|REEM)", ref)
+    elif re.search(r"(TMLG|NPRO|REEM)(\d{6})", ref):
+        match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", ref)
         if match:
-            cve = match.group(1)
+            cve = match.group(1) + match.group(2)
     # buscamos el patrón "[T o G][10 dígitos]" en la referencia
     elif re.search(r"([TG]\d{10})", ref):
         match = re.search(r"([TG]\d{10})", ref)

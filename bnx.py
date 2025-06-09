@@ -37,12 +37,13 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
 def asign_cve_bnx(row):
     descripcion = row["Descripción"]
-    # buscamos el patrón # "[palabra clave][texto] Referencia Númerica: [dígitos] Autorización" en la columna "Descripción"
-    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
-    match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
+    # buscamos el patrón # "[palabra clave][6 dígitos]" en la columna "Descripción"
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave es la palabra clave concatenada con los 6 dígitos
+    # match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
+    match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
-        clave = match.group(2)
+        clave = match.group(1) + match.group(2)
         return clave
     # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
     match = re.search(r"([TG]\d{10})", descripcion)

@@ -27,11 +27,12 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
 def asign_cve_brte(row):
     desc = row["DESCRIPCIÓN"].strip()
     det = row["DESCRIPCIÓN DETALLADA"].strip()
-    # buscamos el patrón "CONCEPTO: [palabra clave] [más texto], REFERENCIA: [dígitos]" en la descripción detallada,
-    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave son los últimos 6 dígitos de [dígitos]
-    match = re.search(r"CONCEPTO:\s*(TMLG|NPRO|REEM)\s*.*?(\d{6})\s", det)
+    # buscamos el patrón "CONCEPTO: [palabra clave][6 dígitos]" en la descripción detallada,
+    # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave es la palabra clave concatenada con los 6 dígitos
+    # match = re.search(r"CONCEPTO:\s*(TMLG|NPRO|REEM)\s*.*?(\d{6})\s", det)
+    match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", det)
     if match:
-        cve = match.group(2)
+        cve = match.group(1) + match.group(2)
         return cve
     # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
     match = re.search(r"([TG]\d{10})", det)

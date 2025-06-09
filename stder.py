@@ -25,7 +25,7 @@ def asign_cve_stder(row):
     ref = row["Referencia"].strip()
     desc = row["Descripcion"].strip()
     concep = row["Concepto"].strip()
-    # buscamos el patrón "[palabra clave][6 díditos]" en el concepto,
+    # buscamos el patrón "[palabra clave][6 dígitos]" en el concepto,
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM"
     match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", concep)
     if match:
