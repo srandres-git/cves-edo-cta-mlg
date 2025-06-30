@@ -72,7 +72,12 @@ def asign_cve_bbva(row):
     else:
         # si la referencia no es vacío, asignamos la referencia a cve
         if ref and not pd.isna(ref) and ref.strip():
-            cve = ref.split(" ")[0]+"_" + fecha
+            if "IVA COM" in ref:
+                cve = "IVA_" + fecha
+            elif "COM " or "SERV " in ref:
+                cve = "COM_" + fecha
+            else:
+                cve = ref.split(" ")[0]+"_" + fecha
         # si no, asignamos la fecha a cve
         else:
             cve = fecha
