@@ -27,6 +27,11 @@ def preprocess_brte(uploaded_file)->pd.DataFrame:
 def asign_cve_brte(row):
     desc = row["DESCRIPCIÓN"].strip()
     det = row["DESCRIPCIÓN DETALLADA"].strip()
+    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
+    match = re.search(r"([TG]\d{10})", det)
+    if match:
+        cve = match.group(1)
+        return cve
     # buscamos el patrón "CONCEPTO: [palabra clave][6 dígitos]" en la descripción detallada,
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave es la palabra clave concatenada con los 6 dígitos
     # match = re.search(r"CONCEPTO:\s*(TMLG|NPRO|REEM)\s*.*?(\d{6})\s", det)
@@ -34,11 +39,13 @@ def asign_cve_brte(row):
     if match:
         cve = match.group(1) + match.group(2)
         return cve
-    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
-    match = re.search(r"([TG]\d{10})", det)
-    if match:
-        cve = match.group(1)
-        return cve
+    # si la palabra "NOM " está en la descripción detallada, buscamos el patrón "[banco a tres letras][un dígito][dos letras]"
+    if "NOM " in det:
+        match = re.search(r"([A-Z]{3}\d[A-Z]{2})", det)
+        if match:
+            cve = match.group(1)
+            return cve
+    #__________________________________________________________________________________________________________    
     cve = row["MOVIMIENTO"].strip() 
     if 'IVA' in desc:
         cve += "_IVA"

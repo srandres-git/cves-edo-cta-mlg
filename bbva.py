@@ -33,24 +33,23 @@ def asign_cve_bbva(row):
     fecha = fecha.split("-")
     fecha = fecha[0] + fecha[1] + fecha[2]
 
-    if ref == "NOTPROVIDED":
-        # extraemos el importe y lo limpiamos
-        if float(row["cargo"]) > 0:
-            importe = str(row["cargo"]).replace(",", "").replace(".", "").replace(" ", "").strip()
-        else: 
-            importe = str(row["Abono"]).replace(",", "").replace(".", "").replace(" ", "").strip()
-        cve = "NP_" + fecha + "_" + importe
+    # buscamos el patrón "[T o G][10 dígitos]" en la referencia
+    if re.search(r"([TG]\d{10})", ref):
+        match = re.search(r"([TG]\d{10})", ref)
+        if match:
+            cve = match.group(1)
     # si en ref aparece "[palabra clave][6 dígitos]", cve es la palabra clave concatenada con los 6 dígitos
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM"
     elif re.search(r"(TMLG|NPRO|REEM)(\d{6})", ref):
         match = re.search(r"(TMLG|NPRO|REEM)(\d{6})", ref)
         if match:
             cve = match.group(1) + match.group(2)
-    # buscamos el patrón "[T o G][10 dígitos]" en la referencia
-    elif re.search(r"([TG]\d{10})", ref):
-        match = re.search(r"([TG]\d{10})", ref)
+    # si la palabra "NOM " está en la referencia, buscamos el patrón "[banco a tres letras][un dígito][dos letras]"
+    elif re.search(r"NOM ", ref):
+        match = re.search(r"([A-Z]{3}\d[A-Z]{2})", ref)
         if match:
             cve = match.group(1)
+    #_________________________________________________________________________________________________________
     # si ref tiene formato "GUIA:[7 dígitos]", cve es "[7 dígitos]"
     elif re.search(r"GUIA:\d{7}", ref):
         match = re.search(r"GUIA:(\d{7})", ref)
@@ -61,6 +60,14 @@ def asign_cve_bbva(row):
         match = re.search(r"(\d{10}) ", ref)
         if match:
             cve = match.group(1)
+
+    elif ref == "NOTPROVIDED":
+        # extraemos el importe y lo limpiamos
+        if float(row["cargo"]) > 0:
+            importe = str(row["cargo"]).replace(",", "").replace(".", "").replace(" ", "").strip()
+        else: 
+            importe = str(row["Abono"]).replace(",", "").replace(".", "").replace(" ", "").strip()
+        cve = "NP_" + fecha + "_" + importe
     # si no, es la cadena de texto que aparece antes del espacio concatenado con la fecha
     else:
         # si la referencia no es vacío, asignamos la referencia a cve

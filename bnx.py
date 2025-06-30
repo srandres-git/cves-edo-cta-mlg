@@ -37,6 +37,12 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
 def asign_cve_bnx(row):
     descripcion = row["Descripción"]
+    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
+    match = re.search(r"([TG]\d{10})", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        clave = match.group(1)
+        return clave
     # buscamos el patrón # "[palabra clave][6 dígitos]" en la columna "Descripción"
     # donde la palabra clave puede ser "TMLG", "NPRO" o "REEM" y la clave es la palabra clave concatenada con los 6 dígitos
     # match = re.search(r"(TMLG|NPRO|REEM).*\s+Referencia Númerica:\s+.+(\d{6})\s+Autorización", descripcion)
@@ -45,12 +51,15 @@ def asign_cve_bnx(row):
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1) + match.group(2)
         return clave
-    # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
-    match = re.search(r"([TG]\d{10})", descripcion)
-    if match:
-        # si encontramos una coincidencia, extraemos la clave
-        clave = match.group(1)
-        return clave
+    # si la palabra "NOM " está en la descripción, buscamos el patrón "[banco a tres letras][un dígito][dos letras]"
+    if "NOM " in descripcion:
+        match = re.search(r"([A-Z]{3}\d[A-Z]{2})", descripcion)
+        if match:
+            # si encontramos una coincidencia, extraemos la clave
+            clave = match.group(1)
+            return clave
+
+    #__________________________________________________________________________________________________________
     # buscamos el formato "LY[6 dígitos]_[dígitos]" en la columna "Descripción"
     match = re.search(r"(LY\d{6}_\d+)", descripcion)
     if match:
