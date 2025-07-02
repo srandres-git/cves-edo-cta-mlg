@@ -116,6 +116,8 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     edo_cta["DETALLE"] = edo_cta.apply(lambda x: '|'.join([x["DESCRIPCIÓN"], x["CONCEPTO"], x["REFERENCIA"], x["REFERENCIA BANCARIA"],x["BENEFICIARIO"]]), axis=1)
     # eliminamos los ceros a la izquierda de la clave
     edo_cta['CLAVE'] = edo_cta['CLAVE'].apply(lambda x: re.sub(r'^[0]+', '', x) if isinstance(x, str) else x)
+    # asignamos el tipo de movimiento a cada fila
+    edo_cta["TIPO MOVIMIENTO"] = edo_cta.apply(asign_tipo_movimiento, axis=1)
     # eliminamos las columnas que no necesitamos
     edo_cta = edo_cta[COLS_EDO_CTA]
     return edo_cta
