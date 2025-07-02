@@ -37,7 +37,7 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si la clave tiene formato "REEM[6 dígitos]" es un REEMBOLSO DE GASTOS
     elif re.match(r"REEM\d{6}", row["CLAVE"]):
         return "REEMBOLSO DE GASTOS"
-    elif row["BANCO"] == "Banamex" and "XX 00000000" in row["CONCEPTO"]:
+    elif row["BANCO"] == "Banamex" and "XX 000" in row["CONCEPTO"]:
         # si el concepto contiene "XX 00000000"
         # y si es abono, es DISPOSICIÓN DE CRÉDITO
         # y si es cargo, es PAGO DE CRÉDITO CON INTERESES        
