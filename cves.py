@@ -8,6 +8,60 @@ from pnc import asign_cve_pnc, preprocess_pnc, format_pnc
 from brte import asign_cve_brte, preprocess_brte, format_brte
 from config import COLS_EDO_CTA
 
+def asign_tipo_movimiento(row: pd.Series) -> str:
+    """
+    Asigna el tipo de movimiento a cada fila del DataFrame edo_cta
+    dependiendo del formato de la clave asignada u otros criterios.
+    """
+    # si la clave tiene formato "T[10 dígitos]" es un PAGO A PROVEEDOR
+    if re.match(r"T\d{10}", row["CLAVE"]):
+        return "PAGO A PROVEEDOR"
+    # si la clave tiene formato "G[10 dígitos]" es un PAGO A ACREEDOR
+    elif re.match(r"G\d{10}", row["CLAVE"]):
+        return "PAGO A ACREEDOR"
+    # si el banco es HSBC y la descripción empieza con "CGO SPEI A " es un PAGO POR XML    
+    elif row["BANCO"] == "HSBC" and row["DESCRIPCIÓN"].startswith("CGO SPEI A "):
+        return "PAGO POR XML"
+    # si el banco es HSBC y la clave empieza con "FIPP_", es DISPOSICIÓN DE CRÉDITO
+    # si empieza con "CRE_", es PAGO DE CRÉDITO CON INTERESES
+    elif row["BANCO"] == "HSBC" and row["CLAVE"].startswith("FIPP_"):
+        return "DISPOSICIÓN DE CRÉDITO"
+    elif row["BANCO"] == "HSBC" and row["CLAVE"].startswith("CRE_"):
+        return "PAGO DE CRÉDITO CON INTERESES"
+    # si la clave tiene formato "TMLG[6 dígitos]" es un TRASPASO ENTRE CUENTAS MLG
+    elif re.match(r"TMLG\d{6}", row["CLAVE"]):
+        return "TRASPASO ENTRE CUENTAS MLG"
+    # si la clave tiene formato "NPRO[6 dígitos]" es un PAGO NO PROGRAMADO
+    elif re.match(r"NPRO\d{6}", row["CLAVE"]):
+        return "PAGO NO PROGRAMADO"
+    # si la clave tiene formato "REEM[6 dígitos]" es un REEMBOLSO DE GASTOS
+    elif re.match(r"REEM\d{6}", row["CLAVE"]):
+        return "REEMBOLSO DE GASTOS"
+    elif row["BANCO"] == "Banamex" and "XX 00000000" in row["CONCEPTO"]:
+        # si el concepto contiene "XX 00000000"
+        # y si es abono, es DISPOSICIÓN DE CRÉDITO
+        # y si es cargo, es PAGO DE CRÉDITO CON INTERESES        
+        if row["ABONO"] > 0:
+            return "DISPOSICIÓN DE CRÉDITO"
+        elif row["CARGO"] > 0:
+            return "PAGO DE CRÉDITO CON INTERESES"
+    # si el banco es Banamex y la clave tiene formato 88MIN[15 caracteres alfanuméricos] o Y[16 dígitos], es pago de IMPUESTOS
+    elif row["BANCO"] == "Banamex" and (re.match(r"88MIN[A-Za-z0-9]{15}", row["CLAVE"]) or re.match(r"Y\d{16}", row["CLAVE"])):
+        return "PAGO DE IMPUESTOS"
+    # si la clave contiene "COM", es una COMISIÓN
+    elif "COM" in row["CLAVE"]:
+        return "COMISIÓN"
+    # si la clave contiene "IVA", es IVA DE COMISIÓN
+    elif "IVA" in row["CLAVE"]:
+        return "IVA DE COMISIÓN"
+    # si la palabra "NOM " está en el detalle, y la clave tiene formato "[tres letras][un dígito][dos letras]", es un PAGO DE NÓMINA
+    elif "NOM " in row["DETALLE"] and re.match(r"[A-Z]{3}\d[A-Z]{2}", row["CLAVE"]):
+        return "PAGO DE NÓMINA"
+    else:
+        # si no se cumple ninguna de las condiciones anteriores, es OTRO
+        return "OTRO"
+    
+
 def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     """
     Asigna la clave de la operación a cada fila del DataFrame edo_cta

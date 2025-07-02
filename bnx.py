@@ -58,7 +58,18 @@ def asign_cve_bnx(row):
             # si encontramos una coincidencia, extraemos la clave
             clave = match.group(1)
             return clave
-
+    # buscamos el patrón "PAGO TERCEROS NO.AU Y[10 dígitos] [6 dígitos]", la clave será Y[10 dígitos][6 dígitos]
+    match = re.search(r"PAGO TERCEROS NO\.AU Y(\d{10}) (\d{6})", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        clave = "Y" + match.group(1) + match.group(2)
+        return clave
+    # buscamos el patrón "Nominas Vig 88MIN[15 caracteres alfanuméricos]", la clave será "88MIN" + los 15 caracteres alfanuméricos
+    match = re.search(r"Nominas Vig (88MIN[A-Za-z0-9]{15})", descripcion)
+    if match:
+        # si encontramos una coincidencia, extraemos la clave
+        clave = match.group(1)
+        return clave
     #__________________________________________________________________________________________________________
     # buscamos el formato "LY[6 dígitos]_[dígitos]" en la columna "Descripción"
     match = re.search(r"(LY\d{6}_\d+)", descripcion)
@@ -96,10 +107,10 @@ def asign_cve_bnx(row):
         # si encontramos una coincidencia, extraemos la clave
         # y concatenamos "D" o "R" dependiendo del valor de "Depósitos" o "Retiros"
         clave = match.group(1)
-        if row["Depósitos"] > 0:
-            clave = "D_" + clave
-        elif row["Retiros"] > 0:
-            clave = "R_" + clave
+        # if row["Depósitos"] > 0:
+        #     clave = "D_" + clave
+        # elif row["Retiros"] > 0:
+        #     clave = "R_" + clave
         
         # si la palabra "IVA" está en la descripción, le agregamos "IVA" a la clave
         if "IVA" in descripcion:
