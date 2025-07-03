@@ -71,12 +71,12 @@ def asign_cve_bnx(row):
         clave = match.group(1)
         return clave
     # buscamos el patrón "PAGO A TERCEROS\s+[caracteres alfanuméricos]+\s+PAGO DE SERVI", la clave serán los caracteres alfanuméricos
-    match = re.search(r"PAGO A TERCEROS\s+([A-Z0-9]+)\s+PAGO DE SERVI", descripcion.upper())
+    match = re.search(r"PAGO A TERCEROS\s+([A-Z0-9]+)[\s$]", descripcion.upper())
     if match:
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1)
         return clave
-    # buscamos el patrón "[inicio][caracteres alfanuméricos]\s+Referencia Númerica:" (i.e., solo una palabra antes de la referencia numérica)
+    # buscamos el patrón "[inicio][caracteres alfanuméricos, al menos un dígito]\s+Referencia Númerica:" (i.e., solo una palabra antes de la referencia numérica)
     # la clave será los caracteres alfanuméricos
     match = re.search(r"^(?=[A-Z0-9]*\d)([A-Z0-9]+)\s+Referencia Númerica:", descripcion)
     if match:
