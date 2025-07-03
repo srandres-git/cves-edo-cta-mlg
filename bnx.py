@@ -59,7 +59,7 @@ def asign_cve_bnx(row):
             clave = match.group(1)
             return clave
     # buscamos el patrón "PAGO TERCEROS NO.AU Y[10 dígitos] [6 dígitos]", la clave será Y[10 dígitos][6 dígitos]
-    match = re.search(r"PAGO TERCEROS NO\.AU Y(\d{10}) (\d{6})", descripcion)
+    match = re.search(r"PAGO TERCEROS\s+NO\.AU\s+Y(\d{10})\s+(\d{6})", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         clave = "Y" + match.group(1) + match.group(2)
