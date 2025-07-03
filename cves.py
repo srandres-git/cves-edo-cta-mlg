@@ -57,6 +57,18 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si la palabra "NOM " está en el detalle, y la clave tiene formato "[tres letras][un dígito][dos letras]", es un PAGO DE NÓMINA
     elif "NOM " in row["DETALLE"] and re.match(r"[A-Z]{3}\d[A-Z]{2}", row["CLAVE"]):
         return "PAGO DE NÓMINA"
+    elif "COMPRA INVERSION" in row["DETALLE"]:
+        # si la palabra "COMPRA INVERSION" está en el detalle, es una COMPRA DE INVERSIONES
+        return "COMPRA DE INVERSIONES"
+    # si aparece "VENTA USD", "VENTA DOLARES" "VENTA DE DOLARES" en el detalle, es una VENTA DE DOLARES
+    elif re.match(r"VENTA (USD|DOLARES|DE DOLARES)", row["DETALLE"].upper()):
+        return "VENTA DE DOLARES"
+    # si el banco es banamex y el concepto tiene patrón "PAGO A TERCEROS\s+([A-Z0-9]+)\s+PAGO DE SERVI", es PAGO REFERENCIADO
+    elif row["BANCO"] == "Banamex" and re.search(r"PAGO A TERCEROS\s+([A-Z0-9]+)\s+PAGO DE SERVI", row["CONCEPTO"].upper()):
+        return "PAGO REFERENCIADO"
+    # si el banco es banamex y el concepto es una sola palabra de caracteres alfanuméricos, también es PAGO REFERENCIADO
+    elif row["BANCO"] == "Banamex" and re.match(r"^[A-Z0-9]+$", row["CONCEPTO"]):
+        return "PAGO REFERENCIADO"
     else:
         # si no se cumple ninguna de las condiciones anteriores, es OTRO
         return "OTRO"
