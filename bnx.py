@@ -78,7 +78,7 @@ def asign_cve_bnx(row):
         return clave
     # buscamos el patrón "[inicio][caracteres alfanuméricos]\s+Referencia Númerica:" (i.e., solo una palabra antes de la referencia numérica)
     # la clave será los caracteres alfanuméricos
-    match = re.search(r"^([A-Z0-9]+)\s+Referencia Númerica:", descripcion)
+    match = re.search(r"^(?=[A-Z0-9]*\d)([A-Z0-9]+)\s+Referencia Númerica:", descripcion)
     if match:
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1)

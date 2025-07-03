@@ -67,7 +67,7 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     elif row["BANCO"] == "Banamex" and re.search(r"PAGO A TERCEROS\s+([A-Z0-9]+)\s+PAGO DE SERVI", row["CONCEPTO"].upper()) and row["CARGO"] > 0:
         return "PAGO REFERENCIADO"
     # si el banco es banamex y el concepto es una sola palabra de caracteres alfanuméricos, también es PAGO REFERENCIADO
-    elif row["BANCO"] == "Banamex" and re.match(r"^[A-Z0-9]+$", row["CONCEPTO"]) and row["CARGO"] > 0:
+    elif row["BANCO"] == "Banamex" and re.match(r"^(?=[A-Z0-9]*\d)[A-Z0-9]+$", row["CONCEPTO"]) and row["CARGO"] > 0:
         return "PAGO REFERENCIADO"
     else:
         # si no se cumple ninguna de las condiciones anteriores, es OTRO
