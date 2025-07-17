@@ -51,6 +51,14 @@ def asign_cve_bnx(row):
         # si encontramos una coincidencia, extraemos la clave
         clave = match.group(1) + match.group(2)
         return clave
+    # si es abono, se pone el número de autorización
+    if row["Depósitos"] > 0:
+        # buscamos el patrón "Autorización: [dígitos]"
+        match = re.search(r"Autorización:\s*(\d+)", descripcion)
+        if match:
+            # si encontramos una coincidencia, extraemos la clave
+            clave = match.group(1)
+            return clave
     # si la palabra "NOM " está en la descripción, buscamos el patrón "[banco a tres letras][un dígito][dos letras]"
     if "NOM " in descripcion:
         match = re.search(r"([A-Z]{3}\d[A-Z]{2})", descripcion)
