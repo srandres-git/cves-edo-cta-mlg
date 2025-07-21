@@ -3,6 +3,7 @@ import pandas as pd
 import io
 from config import CUENTAS
 from cves import asign_cve
+from export import export_to_excel
 
 st.title("Asignador de Claves de Estado de Cuenta")
 
@@ -32,7 +33,7 @@ if uploaded_files:
     # Guardar Excel en memoria
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        result.to_excel(writer, index=False, sheet_name=f"{bank}_{account}", freeze_panes=(1, 0))
+        export_to_excel(df=result, output_file=output, bank=bank, account=account)
     output.seek(0)  # mover el puntero al inicio del archivo
 
     st.dataframe(result)
