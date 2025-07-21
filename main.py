@@ -32,8 +32,7 @@ if uploaded_files:
 
     # Guardar Excel en memoria
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        export_to_excel(df=result, output_file=output, bank=bank, account=account)
+    export_to_excel(df=result, output_file=output, bank=bank, account=account)
     output.seek(0)  # mover el puntero al inicio del archivo
 
     st.dataframe(result)
