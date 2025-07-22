@@ -82,7 +82,7 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["BANCO"] = 'PNC'
     edo_cta["CUENTA"] = cta
     # las columnas "CONCEPTO" y "SALDO" se llenan con "#"
-    edo_cta["CONCEPTO"] = "#"
+    # edo_cta["CONCEPTO"] = "#"
     edo_cta["SALDO"] = "#"
     edo_cta["BENEFICIARIO"] = "#"
     return edo_cta
