@@ -62,7 +62,7 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["Amount"] = pd.to_numeric(edo_cta["Amount"].astype(str).str.replace(",", "").str.replace(" ", "").str.replace("'",""), errors="coerce").fillna(0)
     # determinamos si es cargo o abono
     cargo_kw = ['Debits', 'DB', 'Fees']
-    abono_kw = ['Credits', 'CR']
+    abono_kw = ['Credits', 'CR', 'Deposits']
     # CARGO es el importe si "CONCEPTO" contiene alguna de las palabras clave de cargo, si no, es 0
     edo_cta["CARGO"] = np.where(edo_cta["CONCEPTO"].str.contains('|'.join(cargo_kw), case=False, na=False), edo_cta["Amount"], 0)
     # ABONO es el importe si "CONCEPTO" contiene alguna de las palabras clave de abono, si no, es 0
