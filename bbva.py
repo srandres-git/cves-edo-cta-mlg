@@ -67,7 +67,7 @@ def asign_cve_bbva(row):
             importe = str(row["cargo"]).replace(",", "").replace(".", "").replace(" ", "").strip()
         else: 
             importe = str(row["Abono"]).replace(",", "").replace(".", "").replace(" ", "").strip()
-        cve = "NP_" + fecha + "_" + importe
+        cve = fecha[:2] + importe
     # si no, es la cadena de texto que aparece antes del espacio concatenado con la fecha
     else:
         # si la referencia no es vacío, asignamos la referencia a cve
@@ -81,6 +81,7 @@ def asign_cve_bbva(row):
         # si no, asignamos la fecha a cve
         else:
             cve = fecha
+            
     return cve
     
 def format_bbva(edo_cta:pd.DataFrame, cta: str)->pd.DataFrame:
