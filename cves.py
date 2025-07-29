@@ -136,6 +136,8 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     edo_cta[["DESCRIPCIÓN", "REFERENCIA", "REFERENCIA BANCARIA", "CONCEPTO", "CLAVE"]] = edo_cta[["DESCRIPCIÓN", "REFERENCIA", "REFERENCIA BANCARIA", "CONCEPTO", "CLAVE"]].astype(str)
     # eliminamos los espacios iniciales y finales de las columnas "CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN" y "CLAVE"
     edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]] = edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]].apply(lambda x: x.str.strip())
+    # quitamos espacios múltiples y los cambiamos por uno solo
+    edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]] = edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]].str.replace(r"\s+","\s", regex=True)
     # en la columna "DETALLE" se concatenan todos los datos descriptores
     edo_cta["DETALLE"] = edo_cta.apply(lambda x: '|'.join([x["DESCRIPCIÓN"], x["CONCEPTO"], x["REFERENCIA"], x["REFERENCIA BANCARIA"],x["BENEFICIARIO"]]), axis=1)
     # eliminamos los ceros a la izquierda de la clave
