@@ -171,7 +171,7 @@ def format_bnx(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # extraemos de la descripción el patrón "(.+)Referencia N[úu]m[ée]rica:\s*(.+)(Autorización:\s*\d+)"
     # y asignamos los grupos a las columnas "CONCEPTO", "REFERENCIA" y "REFERENCIA BANCARIA"
     # si no se encuentra el patrón, se asigna NaN a las columnas
-    edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA"]] = edo_cta["DESCRIPCIÓN"].str.extract(r"(.+)Referencia N[úu]m[ée]rica:\s*(.+)(Autorización:\s*\d+)")
+    edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA"]] = edo_cta["DESCRIPCIÓN"].str.extract(r"(.+)Referencia N[úu]m[ée]rica:\s*(.+)Autorización:\s*(\d+)")
     # si no se encuentra el patrón, se asigna '#' a las columnas "CONCEPTO", "REFERENCIA" y "REFERENCIA BANCARIA"
     edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA"]] = edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA"]].fillna("#")
     # eliminamos los espacios iniciales y finales de las columnas "CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA" y "DESCRIPCIÓN"
