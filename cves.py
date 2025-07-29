@@ -79,7 +79,7 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     elif row["BANCO"] == "PNC" and re.match(r"ACCOUNT TRANSFER FROM [0]*4954859906", row["DESCRIPCIÓN"]):
         return "TRASPASO DE MLG LLC"
     # si el banco es Santander y el concepto contiene la palabra crédito, es LÍNEA DE CRÉDITO
-    elif row["BANCO"] == 'Santander' and re.match(r"CREDITO", row['CONCEPTO']):
+    elif row["BANCO"] == 'Santander' and 'CREDITO' in row['CONCEPTO']:
         return "LÍNEA DE CRÉDITO"
     else:
         # si no se cumple ninguna de las condiciones anteriores, es OTRO
@@ -138,6 +138,10 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
     edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]] = edo_cta[["CONCEPTO", "REFERENCIA", "REFERENCIA BANCARIA", "DESCRIPCIÓN", "CLAVE"]].apply(lambda x: x.str.strip())
     # quitamos espacios múltiples y los cambiamos por uno solo
     edo_cta['CONCEPTO'] = edo_cta["CONCEPTO"].str.replace(r'\s+', r' ', regex=True)
+    edo_cta['REFERENCIA'] = edo_cta["REFERENCIA"].str.replace(r'\s+', r' ', regex=True)
+    edo_cta['REFERENCIA BANCARIA'] = edo_cta["REFERENCIA BANCARIA"].str.replace(r'\s+', r' ', regex=True)
+    edo_cta['DESCRIPCIÓN'] = edo_cta["DESCRIPCIÓN"].str.replace(r'\s+', r' ', regex=True)
+
     # en la columna "DETALLE" se concatenan todos los datos descriptores
     edo_cta["DETALLE"] = edo_cta.apply(lambda x: '|'.join([x["DESCRIPCIÓN"], x["CONCEPTO"], x["REFERENCIA"], x["REFERENCIA BANCARIA"],x["BENEFICIARIO"]]), axis=1)
     # eliminamos los ceros a la izquierda de la clave
