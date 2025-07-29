@@ -79,7 +79,7 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["FECHA"] = edo_cta["FECHA"].astype(str).str.replace(r'(\d{2})-(\d{2})-(\d{2})', r'\1/\2/20\3', regex=True)
     edo_cta["FECHA"] = edo_cta.apply(extract_desc_date, axis=1)
     edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"], format="%m/%d/%Y", errors="raise") 
-       
+
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'PNC'
     edo_cta["CUENTA"] = cta
@@ -91,11 +91,11 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
 
 def extract_desc_date(row):
     """Extrae la fecha real de aplicación del pago si esta se encuentra en la descripción"""
-    match = re.search(r"Date: (\d{2})-(\d{2})-(\d{2})", row['DESCRIPCIÓN']) # mm-dd-yy -> mm/dd/yyyy
+    match = re.search(r"Date: (\d{2})-(\d{2})-(\d{2}) Time:", row['DESCRIPCIÓN']) # mm-dd-yy -> mm/dd/yyyy
     if match:
         return match.group(1)+'/'+match.group(2)+'/'+'20'+match.group(3)
     else:
-        match = re.search(r"DATE:(\d{2})(\d{2})(\d{2})", row['DESCRIPCIÓN']) # yymmdd -> mm/dd/yyyy
+        match = re.search(r"DATE:(\d{2})(\d{2})(\d{2}) TIME:", row['DESCRIPCIÓN']) # yymmdd -> mm/dd/yyyy
         if match:
             return match.group(2)+'/'+match.group(3)+'/'+'20'+match.group(1)
         else:
