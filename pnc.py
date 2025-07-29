@@ -72,12 +72,14 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
         print("Hay filas donde CARGO y ABONO son ambos 0")
         print(edo_cta[(edo_cta["CARGO"] == 0) & (edo_cta["ABONO"] == 0)])
     
-    # unificamos el formato de fecha
-    edo_cta["FECHA"] = edo_cta["FECHA"].astype(str).str.replace(r'(\d{2})-(\d{2})-(\d{2})', r'\1/\2/20\3', regex=True)
-    edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"], format="%m/%d/%Y", errors="raise")
-    
     # convertimos la columna "Descripción" a tipo string
     edo_cta["DESCRIPCIÓN"] = edo_cta["DESCRIPCIÓN"].astype(str)
+
+    # unificamos el formato de fecha
+    edo_cta["FECHA"] = edo_cta["FECHA"].astype(str).str.replace(r'(\d{2})-(\d{2})-(\d{2})', r'\1/\2/20\3', regex=True)
+    edo_cta["FECHA"] = edo_cta.apply(extract_desc_date, axis=1)
+    edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"], format="%m/%d/%Y", errors="raise") 
+       
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'PNC'
     edo_cta["CUENTA"] = cta
@@ -86,3 +88,15 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     edo_cta["SALDO"] = "#"
     edo_cta["BENEFICIARIO"] = "#"
     return edo_cta
+
+def extract_desc_date(row):
+    """Extrae la fecha real de aplicación del pago si esta se encuentra en la descripción"""
+    match = re.search(r"Date: (\d{2})-(\d{2})-(\d{2})", row['DESCRIPCIÓN']) # mm-dd-yy -> mm/dd/yyyy
+    if match:
+        return match.group(1)+'/'+match.group(2)+'/'+'20'+match.group(3)
+    else:
+        match = re.search(r"DATE:(\d{2})(\d{2})(\d{2})", row['DESCRIPCIÓN']) # yymmdd -> mm/dd/yyyy
+        if match:
+            return match.group(2)+'/'+match.group(3)+'/'+'20'+match.group(1)
+        else:
+            return row['FECHA']
