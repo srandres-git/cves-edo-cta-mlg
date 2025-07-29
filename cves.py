@@ -78,6 +78,9 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si el banco es PNC y la descripción contiene "ACCOUNT TRANSFER FROM [0]*4954859906", es un TRASPASO DE MLG LLC
     elif row["BANCO"] == "PNC" and re.match(r"ACCOUNT TRANSFER FROM [0]*4954859906", row["DESCRIPCIÓN"]):
         return "TRASPASO DE MLG LLC"
+    # si el banco es Santander y el concepto contiene la palabra crédito, es LÍNEA DE CRÉDITO
+    elif row["BANCO"] == 'Santander' and re.match(r"CREDITO", row['CONCEPTO']):
+        return "LÍNEA DE CRÉDITO"
     else:
         # si no se cumple ninguna de las condiciones anteriores, es OTRO
         return "OTRO"
