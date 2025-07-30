@@ -77,7 +77,7 @@ def format_pnc(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
 
     # unificamos el formato de fecha
     edo_cta["FECHA"] = edo_cta["FECHA"].astype(str).str.replace(r'(\d{2})-(\d{2})-(\d{2})', r'\1/\2/20\3', regex=True)
-    edo_cta["FECHA"] = edo_cta.apply(extract_desc_date, axis=1)
+    # edo_cta["FECHA"] = edo_cta.apply(extract_desc_date, axis=1)
     edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"], format="%m/%d/%Y", errors="raise") 
 
     # asignamos una columna de "BANCO" con el nombre del banco
