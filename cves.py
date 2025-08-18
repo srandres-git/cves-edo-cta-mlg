@@ -69,6 +69,9 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si el banco es banamex y el concepto es una sola palabra de caracteres alfanuméricos, también es PAGO REFERENCIADO
     elif row["BANCO"] == "Banamex" and re.match(r"^(?=[A-Z0-9]*\d)[A-Z0-9]+$", row["CONCEPTO"]) and row["CARGO"] > 0:
         return "PAGO REFERENCIADO"
+    # si es un abono de banamex y el concepto tiene patrón "TRASPASO REF [dígitos] DE FO [ceros]9", es VENTA DE INVERSIÓN
+    elif row["BANCO"] == "Banamex" and row["ABONO"] > 0 and re.search(r"TRASPASO REF \d+ DE FO [0]*9", row["CONCEPTO"]):
+        return "VENTA DE INVERSIÓN"
     # si el banco es PNC y la descripción contiene "WIRE TRANSFER IN" o "ACH CREDIT RECIEVED", es un ABONO DE CLIENTE
     elif row["BANCO"] == "PNC" and ("WIRE TRANSFER IN" in row["DESCRIPCIÓN"] or "ACH CREDIT RECEIVED" in row["DESCRIPCIÓN"]):
         return "ABONO DE CLIENTE"
