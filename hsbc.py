@@ -48,7 +48,7 @@ def asign_cve_hsbc(row):
     #     if match:
     #         cve = 'CRED_'+match.group(1)
     # si aparece "C TRANSF" en la descripción, cve es la referencia de cliente precedida de "COM_"
-    elif ref_banc in ['1661', '1725', '1609']:
+    elif ref_banc in ['1661', '1725', '1609','1523']:
         cve = 'COM_'+ ref_cliente
     # Si la referencia de cliente es "A2000 [5 dígitos]", concatenar "[5 dígitos]" con la referencia bancaria y la fecha
     elif re.search(r"A2000\d{5}", ref_cliente):
