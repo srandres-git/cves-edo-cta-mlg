@@ -19,6 +19,12 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si la clave tiene formato "G[10 dígitos]" es un PAGO A ACREEDOR
     elif re.match(r"G\d{10}", row["CLAVE"]):
         return "PAGO A ACREEDOR"
+    # si la clave contiene "COM", es una COMISIÓN
+    elif "COM" in row["CLAVE"]:
+        return "COMISIÓN"
+    # si la clave contiene "IVA", es IVA DE COMISIÓN
+    elif "IVA" in row["CLAVE"]:
+        return "IVA DE COMISIÓN"
     # si el banco es HSBC y la descripción empieza con "CGO SPEI A " es un PAGO POR XML    
     elif row["BANCO"] == "HSBC" and row["DESCRIPCIÓN"].startswith("CGO SPEI A "):
         return "PAGO POR XML"
@@ -48,12 +54,6 @@ def asign_tipo_movimiento(row: pd.Series) -> str:
     # si el banco es Banamex y la clave tiene formato 88MIN[15 caracteres alfanuméricos] o Y[16 dígitos], es pago de IMPUESTOS
     elif row["BANCO"] == "Banamex" and (re.match(r"88MIN[A-Za-z0-9]{15}", row["CLAVE"]) or re.match(r"Y\d{16}", row["CLAVE"])):
         return "PAGO DE IMPUESTOS"
-    # si la clave contiene "COM", es una COMISIÓN
-    elif "COM" in row["CLAVE"]:
-        return "COMISIÓN"
-    # si la clave contiene "IVA", es IVA DE COMISIÓN
-    elif "IVA" in row["CLAVE"]:
-        return "IVA DE COMISIÓN"
     # si la palabra "NOM " está en el detalle, y la clave tiene formato "[tres letras][un dígito][dos letras]", es un PAGO DE NÓMINA
     elif "NOM " in row["DETALLE"] and re.match(r"[A-Z]{3}\d[A-Z]{2}", row["CLAVE"]):
         return "PAGO DE NÓMINA"
