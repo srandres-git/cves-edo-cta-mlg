@@ -30,17 +30,19 @@ def asign_cve_pnc(row):
         # si encontramos una coincidencia, extraemos la clave
         cve = match.group(1) + match.group(2)
         return cve
-    # Capturar [AsOfDate]_[BaiControl] para movimientos con referencia genérica ('00000000000). Ejemplo: 03022025_293
+    # Capturar [BaiControl]_[primeros 8 dígitos del importe] para movimientos con referencia genérica ('00000000000). Ejemplo: 03022025_293
     if ref == "00000000000":
-        # fecha hasta día (sin hora) en formato DDMMYYYY, dado que viene como "2025-02-26  12:00:00 AM"
-        fecha = str(row["AsOfDate"]).split(" ")[0]
-        if "-" in fecha:
-            fecha = fecha.split("-")
-        else:
-            fecha = fecha.split("/")
-        # print(fecha)
-        fecha = fecha[2] + fecha[1] + fecha[0]
-        cve =  str(row["BaiControl"]) + "_" + fecha
+        # # fecha hasta día (sin hora) en formato DDMMYYYY, dado que viene como "2025-02-26  12:00:00 AM"
+        # fecha = str(row["AsOfDate"]).split(" ")[0]
+        # if "-" in fecha:
+        #     fecha = fecha.split("-")
+        # else:
+        #     fecha = fecha.split("/")
+        # # print(fecha)
+        # fecha = fecha[2] + fecha[1] + fecha[0]
+        # cve =  str(row["BaiControl"]) + "_" + fecha
+        importe = str(row["Amount"]).replace(".","").replace(",","").replace("-","").replace(" ","").replace("'","")
+        cve =  str(row["BaiControl"]) + "_" + importe[:8]
     else:
         # Si la referencia es diferente de "00000000000", asignamos la referencia a cve
         cve = ref
