@@ -108,16 +108,15 @@ def asign_cve(path_edo_cta: str, bank: str, cta: str) -> pd.DataFrame:
         # agrupamos todos los abonos fipp (referencia bancaria '5203' y 'ABONO FIPP' en la descripción) por día (fecha del apunte)
         # sumamos sus importes y sustituimos a todos estos movimientos por uno solo asignando la clave FIPP_[fecha]
         # hacemos lo mismo con los créditos (referencia bancaria '1065'), asignando la clave "CRE_[fecha]"
-        fipps = edo_cta[(edo_cta["Referencia bancaria"].isin(['1065','5203']))\
-                        & (edo_cta['Descripción'].str.contains(r"ABONO FIPP|CARGO CREDITO"))] \
-                    .groupby(["Referencia bancaria", "Fecha del apunte"]).agg({"Importe de crédito": "sum","Importe del débito": "sum"}).reset_index()
+        fipps_ind = edo_cta[(edo_cta["Referencia bancaria"].isin(['1065','5203']))\
+                        & (edo_cta['Descripción'].str.contains(r"ABONO FIPP|CARGO CREDITO"))].copy()
+        fipps =  fipps_ind.groupby(["Referencia bancaria", "Fecha del apunte"]).agg({"Importe de crédito": "sum","Importe del débito": "sum"}).reset_index()
         creds = fipps[fipps["Referencia bancaria"] == "1065"]
         fipps = fipps[fipps["Referencia bancaria"] == "5203"]
         fipps["cve"] = "FIPP_" + fipps["Fecha del apunte"].astype(str).str.replace("/", "").str.replace(" ", "").str.replace(":", "")
         creds["cve"] = "CRE_" + creds["Fecha del apunte"].astype(str).str.replace("/", "").str.replace(" ", "").str.replace(":", "")
         # eliminamos los fipps originales
-        edo_cta = edo_cta[edo_cta["Referencia bancaria"] != "5203"]
-        edo_cta = edo_cta[edo_cta["Referencia bancaria"] != "1065"]
+        edo_cta = edo_cta[~edo_cta.index.isin(fipps_ind.index)]
         # unimos los fipps agrupados al dataframe original
         edo_cta = pd.concat([edo_cta, fipps, creds], ignore_index=True)
         # formateamos el dataframe
