@@ -18,7 +18,7 @@ def asign_cve_hsbc(row):
     ref_cliente = row["Referencia de cliente"]
     ref_banc = row["Referencia bancaria"]
     cve = np.nan
-    if not ref_banc in ['1661', '1725', '1609','1523']:
+    if not ref_banc in ['1661', '1725', '1609']:
         # buscamos el patrón de clave de pago a proveedor o acreedor "[T o G][10 dígitos]"
         match = re.search(r"([TG]\d{10})", descripcion)
         if match:
