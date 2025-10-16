@@ -61,7 +61,8 @@ def asign_cve_hsbc(row):
         match = re.search(r"ABONO POR CARTERA REMANENTE ([A-Z]+)", descripcion)
         if match:
             d,m,y = str(row['Fecha del apunte']).split('/')
-            cve = d+m+y[-2:]+match.group(1)
+            cve = match.group(1)+d+m+y[-2:]
+        else: return ref_cliente
     # si en la referencia de cliente aparece "D[5 dígitos]", cve es este patrón
     elif re.search(r"D\d{5}", ref_cliente):
         match = re.search(r"D(\d{5})", ref_cliente)
