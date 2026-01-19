@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import io
-from config import CUENTAS
+from config import CUENTAS, TYPES_EDO_CTA
 from cves import asign_cve
 from export import export_to_excel
 
@@ -17,7 +17,7 @@ def load_file(uploaded_file):
 
 uploaded_files = st.file_uploader(
     "Arrastra uno o más archivos de estados de cuenta",
-    type=['csv', 'xlsx', 'txt'],
+    type=TYPES_EDO_CTA[bank],
     accept_multiple_files=True
 )
 

@@ -7,5 +7,14 @@ CUENTAS = {
     'HSBC': ['019','455'],
     'BBVA': ['389','844'],
     'Banorte': ['858'],
-    'PNC': ['865']
+    'PNC': ['865','891']
+}
+# extensiones de archivo aceptadas para cada estado de cuenta
+TYPES_EDO_CTA = {
+    'Banamex':'csv',
+    'Santander': 'csv',
+    'HSBC': 'xlsx',
+    'BBVA': 'txt',
+    'Banorte': 'csv',
+    'PNC': 'csv'
 }
