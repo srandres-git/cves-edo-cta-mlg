@@ -25,9 +25,9 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
     print(df.columns)
     # Depósitos, Retiros y Saldo son columnas que contienen valores numéricos
     # convertimos las columnas "Depósitos" y "Retiros" a tipo numérico rellenando los nulos con 0
-    df["Depósitos"] = pd.to_numeric(df["Depósitos"].to_string().str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
-    df["Retiros"] = pd.to_numeric(df["Retiros"].to_string().str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
-    df["Saldo"] = pd.to_numeric(df["Saldo"].to_string().str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
+    df["Depósitos"] = pd.to_numeric(df["Depósitos"].astype(str).str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
+    df["Retiros"] = pd.to_numeric(df["Retiros"].astype(str).str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
+    df["Saldo"] = pd.to_numeric(df["Saldo"].astype(str).str.replace(",", "").str.replace(" ", ""), errors="coerce").fillna(0)
 
     # Descripción a string
     df["Descripción"] = df["Descripción"].astype(str)
