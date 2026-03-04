@@ -8,10 +8,7 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
     # # para Banamex, se recibe como .csv    
     # primero leemos el archivo csv y guardamos todas las filas
     content = uploaded_file.read()               # bytes
-    encoding = chardet.detect(content)['encoding']
-    if encoding is None:
-        print("No se pudo detectar la codificación del archivo.")
-        encoding = "latin-1"
+    encoding = "latin-1" # por defecto, pero se puede detectar con chardet si es necesario
     text = content.decode(encoding)              # str
     lines = text.splitlines()                    # lista de líneas
 
