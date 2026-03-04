@@ -16,7 +16,7 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
     
     # buscamos la fila que contiene "Detalle de Movimientos - Depósitos y Retiros"
-    default_header_row = 13
+    default_header_row = 10
     header_row = next((i for i, line in enumerate(lines) if "Detalle de Movimientos - Depósitos y Retiros" in line), default_header_row)+1
     data = lines[header_row:]
     # creamos un DataFrame a partir de las líneas del archivo csv
