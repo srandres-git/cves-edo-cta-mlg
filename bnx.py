@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 import chardet
+import streamlit as st
 
 def preprocess_bnx(uploaded_file)->pd.DataFrame:
     # # para Banamex, se recibe como .csv    
@@ -16,8 +17,11 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
 
     
     # buscamos la fila que contiene "Detalle de Movimientos - Depósitos y Retiros"
-    default_header_row = 10
-    header_row = next((i for i, line in enumerate(lines) if "Detalle de Movimientos - Depósitos y Retiros" in line), default_header_row)+1
+    header_row = next((i for i, line in enumerate(lines) if "Detalle de Movimientos - Depósitos y Retiros" in line), None)
+    if header_row is None:
+        st.error("No se encontró la fila de encabezado en el archivo. Asegúrate de que el formato del archivo sea correcto.")
+        return pd.DataFrame(columns=["Fecha", "Descripción", "Depósitos", "Retiros", "Saldo"])
+    header_row += 1
     data = lines[header_row:]
     # creamos un DataFrame a partir de las líneas del archivo csv
     from io import StringIO
