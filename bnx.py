@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import re
-import chardet
 import streamlit as st
 
 def preprocess_bnx(uploaded_file)->pd.DataFrame:
@@ -12,7 +11,6 @@ def preprocess_bnx(uploaded_file)->pd.DataFrame:
     text = content.decode(encoding)              # str
     lines = text.splitlines()                    # lista de líneas
 
-    st.write(lines[:20])  # Mostrar las primeras 20 líneas para verificar el formato del archivo
     # buscamos la fila que contiene "Detalle de Movimientos - Depósitos y Retiros"
     header_row = next((i for i, line in enumerate(lines) if "Detalle de Movimientos - Depósitos y Retiros" in line), None)
     if header_row is None:

@@ -5,7 +5,7 @@ from utils import txt_to_df
 
 def preprocess_bbva(uploaded_file)->pd.DataFrame:
     # para BBVA, se recibe como .txt
-    df = txt_to_df(uploaded_file)
+    df = txt_to_df(uploaded_file, default_encoding="latin-1")
     # convertimos las columnas "Cargo", "abono", "Saldo" a tipo numérico rellenando los nulos con 0
     for col in ["cargo", "Abono", "Saldo"]:
         df[col] = pd.to_numeric(df[col].str.replace(",", "").str.replace(" ", "").str.replace("'", ""), errors="coerce").fillna(0)
