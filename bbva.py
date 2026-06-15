@@ -3,6 +3,8 @@ import numpy as np
 import re
 from utils import txt_to_df
 
+import streamlit as st # TODO: borrar después de pruebas
+
 def preprocess_bbva(uploaded_file)->pd.DataFrame:
     # para BBVA, se recibe como .txt
     df = txt_to_df(uploaded_file, default_encoding="latin-1")
@@ -28,6 +30,8 @@ def asign_cve_bbva(row):
     if match:
         # concatenamos todo lo que viene después de "/" (puede haber varios o ningún match)
         ref = "".join(match.groups())
+        if len(match.groups()) > 1:
+            st.write(f"Referencia concatenada: {ref}") # TODO: borrar después de pruebas
     else:
         ref = ""
     cve = np.nan
