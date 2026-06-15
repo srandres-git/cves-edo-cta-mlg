@@ -3,8 +3,6 @@ import numpy as np
 import re
 from utils import txt_to_df
 
-import streamlit as st # TODO: borrar después de pruebas
-
 def preprocess_bbva(uploaded_file)->pd.DataFrame:
     # para BBVA, se recibe como .txt
     df = txt_to_df(uploaded_file, default_encoding="latin-1")
@@ -30,8 +28,6 @@ def asign_cve_bbva(row):
     if match:
         # concatenamos todo lo que viene después de "/" (puede haber varios o ningún match)
         ref = "".join(match.groups())
-        if len(match.groups()) > 1:
-            st.write(f"Referencia concatenada: {ref}") # TODO: borrar después de pruebas
     else:
         ref = ""
     cve = np.nan
@@ -109,7 +105,8 @@ def format_bbva(edo_cta:pd.DataFrame, cta: str)->pd.DataFrame:
     # el concepto es lo que aparece en "Concepto / Referencia" antes de "/"
     # y referencia es lo que aparece después de "/"
     edo_cta["CONCEPTO"] = edo_cta["Concepto / Referencia"].str.split("/").str[0]
-    edo_cta["REFERENCIA"] = edo_cta["Concepto / Referencia"].str.split("/").str[1]
+    # la referencia es lo que aparece después de "/" (puede haber varios o ningún match)
+    edo_cta["REFERENCIA"] = edo_cta["Concepto / Referencia"].str.split("/").str[1:].apply(lambda x: "/".join(x) if isinstance(x, list) else "") 
     # asignamos una columna de "BANCO" con el nombre del banco
     edo_cta["BANCO"] = 'BBVA'
     # las columnas "REFERENCIA BANCARIA" y "DESCRIPCIÓN" se llenan con "#"
