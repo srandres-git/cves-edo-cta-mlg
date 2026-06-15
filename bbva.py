@@ -26,7 +26,10 @@ def asign_cve_bbva(row):
     # la referencia es la cadena de texto que aparece después de "/"
     match = re.search(r"/(.+)", ref)
     if match:
-        ref = match.group(1)
+        # concatenamos todo lo que viene después de "/" (puede haber varios o ningún match)
+        ref = "".join(match.groups())
+    else:
+        ref = ""
     cve = np.nan
     # fecha hasta día (sin hora) en formato DDMMYYYY, dado que viene como "DD-MM-YYYY"
     fecha = str(row["Día"])
