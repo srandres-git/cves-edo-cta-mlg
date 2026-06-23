@@ -80,6 +80,32 @@ def extract_beneficiario(row):
     
     return beneficiario.strip()
 
+def parse_fecha_multiple_formatos(fecha_str):
+    """Parsea fechas en múltiples formatos: %d/%m/%Y o %d/mes_abreviado/año."""
+    fecha_str = str(fecha_str).strip()
+    
+    # Mapeo de meses en español abreviados
+    meses_es = {
+        'ene': 1, 'feb': 2, 'mar': 3, 'abr': 4, 'may': 5, 'jun': 6,
+        'jul': 7, 'ago': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dic': 12
+    }
+    
+    # Intenta con el formato original (día/mes_número/año)
+    try:
+        return pd.to_datetime(fecha_str, format="%d/%m/%Y")
+    except:
+        pass
+    
+    # Intenta con formato de mes en español (ej: 22/jun./2026)
+    match = re.search(r'(\d{1,2})/([a-z]{3})\.?/(\d{4})', fecha_str, re.IGNORECASE)
+    if match:
+        dia, mes_es, año = match.groups()
+        mes_num = meses_es.get(mes_es.lower())
+        if mes_num:
+            return pd.to_datetime(f"{int(dia):02d}/{mes_num:02d}/{año}", format="%d/%m/%Y")
+    
+    raise ValueError(f"No se puede parsear la fecha: {fecha_str}")
+
 def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
     # formateamos el DataFrame para que tenga las columnas necesarias
     # y renombramos las columnas
@@ -90,8 +116,8 @@ def format_brte(edo_cta:pd.DataFrame, cta:str)->pd.DataFrame:
         "DESCRIPCIÓN": "CONCEPTO",
         "DESCRIPCIÓN DETALLADA": "DESCRIPCIÓN",
     })
-    # fecha a datetime
-    edo_cta["FECHA"] = pd.to_datetime(edo_cta["FECHA"].astype(str), format="%d/%m/%Y", errors="raise")
+    # fecha a datetime - soporta múltiples formatos
+    edo_cta["FECHA"] = edo_cta["FECHA"].apply(parse_fecha_multiple_formatos)
     # armamos la referencia bancaria con el código de transacción y la sucursal
     edo_cta["REFERENCIA BANCARIA"] = ('Cod. Transacción: ' + edo_cta["COD. TRANSAC"] +' ' + 'Sucursal: ' + edo_cta["SUCURSAL"])
     edo_cta["BENEFICIARIO"] = edo_cta.apply(extract_beneficiario, axis=1)
